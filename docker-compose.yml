@@ -1,0 +1,31 @@
+version: '3.2'
+
+services:
+
+  nginx:
+    build:
+      context: .
+      dockerfile: ./docker/apache/Dockerfile.dev
+    ports:
+      - "8080:80"
+    volumes:
+      - ./:/var/www/html
+      - vendor:/var/www/html/vendor
+      - ./docker/apache/apache.conf:/etc/apache2/sites-available/000-default.conf
+      - ./docker/apache/start-dev.sh:/var/www/html/start-dev.sh
+      - ./docker/phpfpm/local.ini:/usr/local/etc/php/conf.d/local.ini
+      - ./docker/scheduler/crontab-dev:/etc/cron.d/scheduler-cron
+
+  mysql:
+    image: mysql:8
+    command: --default-authentication-plugin=mysql_native_password --sql_mode=STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION
+    ports:
+      - "13306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=emoji
+    volumes:
+      - db-data:/var/lib/mysql
+volumes:
+  db-data:
+  vendor:

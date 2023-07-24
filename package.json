@@ -3,7 +3,19 @@
     "type": "module",
     "scripts": {
         "dev": "vite",
-        "build": "vite build"
+        "build": "vite build",
+        "watch": "npm run development -- --watch",
+        "watch-poll": "npm run watch -- --watch-poll",
+        "prod": "npm run production",
+        "docker": "docker-compose up -d",
+        "container": "docker-compose exec nginx ",
+        "artisan": "docker-compose exec nginx php artisan ",
+        "test": "docker-compose exec nginx php artisan test ",
+        "composer": "docker-compose exec nginx php composer.phar ",
+        "vendor": "docker-compose exec nginx php composer.phar install",
+        "php": "docker-compose exec nginx cp .env.example .env && npm run artisan key:generate && npm run artisan config:cache && npm run artisan migrate",
+        "cache": "npm run artisan config:cache && npm run artisan route:cache && npm run artisan view:cache && npm run artisan cache:clear",
+        "bash": "docker-compose exec nginx bash"
     },
     "devDependencies": {
         "axios": "^1.1.2",
