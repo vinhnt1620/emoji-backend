@@ -11,7 +11,7 @@ class TitleController extends Controller
 {
     public function index()
     {
-        $titles = TitleModel::all();
+        $titles = TitleModel::first();
 
         return $titles;
     }
