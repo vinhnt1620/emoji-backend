@@ -6,12 +6,15 @@ use Illuminate\Http\Request;
 use App\Models\TitleModel;
 use Exception;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class TitleController extends Controller
 {
     public function index()
     {
         $titles = TitleModel::first();
+
+        Log::info('Test', ['title' => $titles]);
 
         return $titles;
     }
