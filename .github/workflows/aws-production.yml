@@ -62,7 +62,7 @@ jobs:
         # Build a docker container and
         # push it to ECR so that it can
         # be deployed to ECS.
-        cat "$DOT_ENV_PARAM"
+        cat $DOT_ENV_PARAM
         docker build -t $ECR_REPOSITORY:$IMAGE_TAG -f docker/apache/Dockerfile --build-arg DOT_ENV="$DOT_ENV_PARAM" .
         docker tag $ECR_REPOSITORY:$IMAGE_TAG $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
