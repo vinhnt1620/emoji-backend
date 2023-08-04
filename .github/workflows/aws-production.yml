@@ -18,7 +18,7 @@ env:
   DOT_ENV_PARAM: ${{ secrets.PROD_DOT_ENV }}                    # Parameter Store name of .env: emoji-search-dot-env-production
 
   CONTAINER_NAME: ${{ secrets.CONTAINER_NAME }}                 # name of the container in the task definition
-  IMAGE_TAG: ${{ github.sha }}
+  IMAGE_TAG: latest
 
 permissions:
   contents: read
