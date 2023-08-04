@@ -30,8 +30,9 @@ jobs:
     environment: production
 
     steps:
-    - name:
-      echo ${{ env.DOT_ENV_PARAM }}
+    - name: Test
+      run: |
+        echo ${{ env.DOT_ENV_PARAM }}
     - name: Checkout
       uses: actions/checkout@v3
 
