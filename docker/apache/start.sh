@@ -6,8 +6,8 @@
 php artisan cache:clear
 php artisan config:cache
 php artisan route:cache
-#php artisan migrate --force
-#php artisan db:seed
+php artisan migrate --force
+php artisan db:seed
 
 touch storage/logs/laravel.log
 chgrp -R www-data storage bootstrap/cache
