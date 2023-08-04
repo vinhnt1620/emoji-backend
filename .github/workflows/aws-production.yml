@@ -53,7 +53,6 @@ jobs:
         push: true
         tags: |
           ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}
-          ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:latest
 
     - name: Download Task Definition
       run: |
