@@ -16,8 +16,8 @@ RUN php $APP_HOME/composer.phar dump-autoload --classmap-authoritative
 
 # Application Image
 FROM base
-#ARG DOT_ENV
-#ENV DOT_ENV=$DOT_ENV
+ARG DOT_ENV
+ENV DOT_ENV=$DOT_ENV
 ARG APP_HOME=/var/www/html
 ENV APP_HOME=$APP_HOME
 RUN rm -rf $APP_HOME && mkdir $APP_HOME
@@ -36,7 +36,7 @@ USER www-data
 
 # Copy source files
 COPY --from=deps --chown=www-data:www-data $APP_HOME $APP_HOME
-#RUN echo "$DOT_ENV" > $APP_HOME/.env
+RUN echo "$DOT_ENV" > $APP_HOME/.env
 
 EXPOSE 80
 
