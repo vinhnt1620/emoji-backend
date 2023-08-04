@@ -1,8 +1,13 @@
 # Create base image
-FROM public.ecr.aws/b6l5k5p0/base-image as base
+FROM php:8.2-apache as base
 
-RUN echo 'alias cls="clear"' >> ~/.bashrc
-RUN echo 'alias ll="ls -alh"' >> ~/.bashrc
+RUN apt-get update
+RUN apt-get install libicu-dev default-mysql-client libzip-dev libpng-dev libonig-dev libcurl4-openssl-dev libcurl4 cron vim -y
+RUN docker-php-ext-configure intl && \
+    docker-php-ext-install pdo pdo_mysql intl pcntl opcache exif bcmath zip gd mbstring curl
+
+RUN php -v
+RUN php -m
 
 COPY ./docker/phpfpm/local.ini /usr/local/etc/php/conf.d/local.ini
 
@@ -19,8 +24,8 @@ RUN php $APP_HOME/composer.phar dump-autoload --classmap-authoritative
 
 # Application Image
 FROM base
-ARG DOT_ENV
-ENV DOT_ENV=$DOT_ENV
+#ARG DOT_ENV
+#ENV DOT_ENV=$DOT_ENV
 ARG APP_HOME=/var/www/html
 ENV APP_HOME=$APP_HOME
 RUN rm -rf $APP_HOME && mkdir $APP_HOME
@@ -39,7 +44,7 @@ USER www-data
 
 # Copy source files
 COPY --from=deps --chown=www-data:www-data $APP_HOME $APP_HOME
-RUN echo "$DOT_ENV" > $APP_HOME/.env
+#RUN echo "$DOT_ENV" > $APP_HOME/.env
 
 EXPOSE 80
 
@@ -56,4 +61,4 @@ RUN crontab /etc/cron.d/scheduler-cron
 USER root
 RUN chmod +x /start.sh
 
-CMD ["/start.sh"]
+ENTRYPOINT ["/start.sh"]
