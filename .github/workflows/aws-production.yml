@@ -30,6 +30,8 @@ jobs:
     environment: production
 
     steps:
+    - name:
+      echo ${{ env.DOT_ENV_PARAM }}
     - name: Checkout
       uses: actions/checkout@v3
 
@@ -44,29 +46,29 @@ jobs:
       id: login-ecr
       uses: aws-actions/amazon-ecr-login@v1
 
-    # - name: Set up Docker Buildx
-    #   uses: docker/setup-buildx-action@v2
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v2
 
-    # - name: Build and push image to Amazon ECR
-    #   uses: docker/build-push-action@v2
-    #   with:
-    #     context: . # Assuming Dockerfile is in the root directory
-    #     file: ./docker/apache/Dockerfile # Path to Dockerfile
-    #     push: true
-    #     tags: |
+    - name: Build and push image to Amazon ECR
+      uses: docker/build-push-action@v2
+      with:
+        context: . # Assuming Dockerfile is in the root directory
+        file: ./docker/apache/Dockerfile # Path to Dockerfile
+        push: true
+        tags: |
 
-    #     build-args: |
-    #       DOT_ENV={{ env.DOT_ENV_PARAM }}
+        build-args: |
+          DOT_ENV={{ env.DOT_ENV_PARAM }}
 
-    - name: Build, tag, and push image to Amazon ECR
-      id: build-image
-      run: |
-        # Build a docker container and
-        # push it to ECR so that it can
-        # be deployed to ECS.
-        docker build -t $ECR_REPOSITORY:$IMAGE_TAG -f docker/apache/Dockerfile --build-arg DOT_ENV="$DOT_ENV_PARAM" .
-        docker tag $ECR_REPOSITORY:$IMAGE_TAG $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+    # - name: Build, tag, and push image to Amazon ECR
+    #   id: build-image
+    #   run: |
+    #     # Build a docker container and
+    #     # push it to ECR so that it can
+    #     # be deployed to ECS.
+    #     docker build -t $ECR_REPOSITORY:$IMAGE_TAG -f docker/apache/Dockerfile --build-arg DOT_ENV="$DOT_ENV_PARAM" .
+    #     docker tag $ECR_REPOSITORY:$IMAGE_TAG $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+    #     docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
       
     - name: Download Task Definition
       run: |
@@ -74,18 +76,18 @@ jobs:
         --task-definition $ECS_TASK_DEFINITION \
         --query taskDefinition > task-definition.json
 
-    - name: Fill in the new image ID in the Amazon ECS task definition
-      id: task-def
-      uses: aws-actions/amazon-ecs-render-task-definition@v1
-      with:
-        task-definition: task-definition.json
-        container-name: ${{ env.CONTAINER_NAME }}
-        image: ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}
+    # - name: Fill in the new image ID in the Amazon ECS task definition
+    #   id: task-def
+    #   uses: aws-actions/amazon-ecs-render-task-definition@v1
+    #   with:
+    #     task-definition: task-definition.json
+    #     container-name: {{ env.CONTAINER_NAME }}
+    #     image: {{ steps.login-ecr.outputs.registry }}/{{ env.ECR_REPOSITORY }}:{{ env.IMAGE_TAG }}
 
-    - name: Deploy Amazon ECS task definition
-      uses: aws-actions/amazon-ecs-deploy-task-definition@v1
-      with:
-        task-definition: ${{ steps.task-def.outputs.task-definition }}
-        service: ${{ env.ECS_SERVICE }}
-        cluster: ${{ env.ECS_CLUSTER }}
-        wait-for-service-stability: true
+    # - name: Deploy Amazon ECS task definition
+    #   uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+    #   with:
+    #     task-definition: {{ steps.task-def.outputs.task-definition }}
+    #     service: {{ env.ECS_SERVICE }}
+    #     cluster: {{ env.ECS_CLUSTER }}
+    #     wait-for-service-stability: true
