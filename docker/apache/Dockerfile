@@ -36,6 +36,7 @@ USER www-data
 
 # Copy source files
 COPY --from=deps --chown=www-data:www-data $APP_HOME $APP_HOME
+RUN echo "$DOT_ENV"
 RUN echo "$DOT_ENV" > $APP_HOME/.env
 
 EXPOSE 80
