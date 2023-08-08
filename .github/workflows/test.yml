@@ -1,6 +1,5 @@
 name: App test
 on:
-  #push:
   pull_request:
     branches:
       - main
@@ -57,9 +56,6 @@ jobs:
 
       - name: Generate key
         run: php artisan key:generate
-
-      - name: Generate jwt key
-        run: php artisan jwt:secret
 
       - name: Directory Permissions
         run: chmod -R 777 storage bootstrap/cache
