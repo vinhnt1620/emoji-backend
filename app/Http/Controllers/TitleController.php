@@ -14,7 +14,7 @@ class TitleController extends Controller
     {
         $titles = TitleModel::first();
 
-        Log::info('Test', ['title' => $titles]);
+        // logger()->error('ERROR', ['titles' => $titles]);
 
         return $titles;
     }
