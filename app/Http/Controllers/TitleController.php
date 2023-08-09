@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\TitleModel;
 use Exception;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class TitleController extends Controller
 {
@@ -13,7 +14,7 @@ class TitleController extends Controller
     {
         $titles = TitleModel::first();
 
-        // logger()->error('ERROR', ['titles' => $titles]);
+        logger()->error('ERROR', ['titles' => $titles]);
 
         return $titles;
     }
