@@ -18,7 +18,7 @@ env:
   DOT_ENV_PARAM: ${{ secrets.PROD_DOT_ENV }}                    # Parameter Store name of .env: emoji-search-dot-env-production
 
   CONTAINER_NAME: ${{ secrets.CONTAINER_NAME }}                 # name of the container in the task definition
-  IMAGE_TAG: latest
+  IMAGE_TAG: ${{ github.sha }}
 
 permissions:
   contents: read
@@ -30,6 +30,9 @@ jobs:
     environment: production
 
     steps:
+    - name: Test
+      run: |
+        echo ${{ env.DOT_ENV_PARAM }}
     - name: Checkout
       uses: actions/checkout@v3
 
@@ -52,9 +55,11 @@ jobs:
     #   with:
     #     context: . # Assuming Dockerfile is in the root directory
     #     file: ./docker/apache/Dockerfile # Path to Dockerfile
-    #     push: true
+    #     push: false
     #     tags: |
-    #       
+    #       {{ steps.login-ecr.outputs.registry }}/{{ env.ECR_REPOSITORY }}:{{ env.IMAGE_TAG }}
+    #     build-args: |
+    #       DOT_ENV={{  }}
 
     - name: Build, tag, and push image to Amazon ECR
       id: build-image
